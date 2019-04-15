@@ -51,5 +51,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
+	log.Println(r)
 	log.Printf("rpc success: %d %s", r.Header.Retcode, r.Header.Retmsg)
 }
