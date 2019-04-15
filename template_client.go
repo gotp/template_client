@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	glog "github.com/golang/glog"
-	commonproto "online_consultant/proto"
-	proto "online_consultant/proto/template_server"
-	nameresolver "online_consultant/server/template_client/service/name_resolver"
+	//glog "github.com/golang/glog"
+	common "github.com/gotp/proto"
+	svrproto "github.com/gotp/proto/template_server"
+	nameresolver "github.com/gotp/template_client/service/name_resolver"
 )
 
 const (
-	address     = "local:///OnlineConsultant.TemplateServer.TemplateService"
+	address     = "local:///gotp.TemplateServer.TemplateService"
 	resolverConfig = "./resolver.conf"
 )
 
@@ -22,9 +22,9 @@ func main() {
 	flag.Parse()
 	// Init resolver
 	if nameresolver.GetResolverConfig().Init(resolverConfig) == false {
-        glog.Fatal("Load resolver config failed!")
+        log.Fatal("Load resolver config failed!")
     }
-    glog.Info("Load resolver config success")
+    log.Printf("Load resolver config success")
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithBalancerName("round_robin"), grpc.WithInsecure())
 	if err != nil {
@@ -32,19 +32,19 @@ func main() {
 	}
 	defer conn.Close()
 
-	c := proto.NewTemplateServiceClient(conn)
+	c := svrproto.NewTemplateServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := c.Test(ctx, &proto.TestRequest{
-		Header: &commonproto.RequestHeader{
+	r, err := c.Test(ctx, &svrproto.TestRequest{
+		Header: &common.RequestHeader{
 			RequestId: "R00001",
 			ClientId: "C00001",
-			ClientType: commonproto.ClientType_H5Client,
+			ClientType: common.ClientType_H5Client,
 			Version: "V1",
 			TestFlag: true,
 		},
-		Data: &proto.TestRequestData{
+		Data: &svrproto.TestRequestData{
 			Dummy: 1, 
 		},
 	})
