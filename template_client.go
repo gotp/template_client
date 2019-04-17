@@ -37,13 +37,11 @@ func main() {
 	defer cancel()
 
 	r, err := c.Test(ctx, &svrproto.TestRequest{
-		Header: &common.RequestHeader{
-			RequestId: "R00001",
-			ClientId: "C00001",
-			ClientType: common.ClientType_H5Client,
-			Version: "V1",
-			TestFlag: true,
-		},
+		RequestId: "R00001",
+		ClientId: "C00001",
+		ClientType: common.ClientType_H5Client,
+		Version: "V1",
+		TestFlag: true,
 		Data: &svrproto.TestRequestData{
 			Dummy: 1, 
 		},
@@ -52,5 +50,5 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 	log.Println(r)
-	log.Printf("rpc success: %d %s", r.Header.Retcode, r.Header.Retmsg)
+	log.Printf("rpc success: %d %s", r.Retcode, r.Retmsg)
 }
